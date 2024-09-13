@@ -202,12 +202,12 @@ class MainActivity : ComponentActivity() {
         var resultDesc: String = ""
         Log.d("Demo", "onDiagnoseProcess called, ecgData size:${ecgData.size}")
         if (ecgData.size > 2500) {
-            val result: Array<DoubleArray> = manager.diagnose(ecgData.toDoubleArray(), 250.0, 1.2)
+            val result: Array<DoubleArray> = manager.diagnose(ecgData.toDoubleArray(), 250.0)
             val preprocessedSignal = result[0]
             val hrInfo: DoubleArray = result[1]
             val rhythmInfo: DoubleArray = result[2]
 
-            val labels = listOf<String>("正常", "房颤", "室颤/室扑", "其他心律不齐", "噪声")
+            val labels = listOf<String>("正常", "房扑", "房颤", "室颤/室扑", "其他心律不齐", "噪声")
             val rhythmType = rhythmInfo[0]
             val rhythmP = rhythmInfo[1]
 
