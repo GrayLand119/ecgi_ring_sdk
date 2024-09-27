@@ -69,6 +69,10 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // TODO:  Remove apiKey when public demo
+        val apiKey = "Lck01t612usETV8+dllv1ywzetzBt0cy3TXeKPqc7Wfz69T9LERsRcDMyumiviyP" // Trial before 2025
+        manager.register(baseContext, apiKey)
+
         enableEdgeToEdge()
         setContent {
             ECGSDKDemoTheme {
@@ -142,10 +146,6 @@ class MainActivity : ComponentActivity() {
             resources.openRawResource(R.raw.normal100).use { inputStream ->
                 InputStreamReader(inputStream, Charsets.UTF_8).useLines { lines ->
                     var count = 0
-//                    val dv: Sequence<Double> = lines.map { element ->
-//                        element.toDouble()
-//                    }
-//                    ecgData = dv.toList()
                     for (line in lines) {
                         ecgData.add(line.toDouble())
                         count++
@@ -207,28 +207,24 @@ class MainActivity : ComponentActivity() {
             val hrInfo: DoubleArray = result[1]
             val rhythmInfo: DoubleArray = result[2]
 
-            val labels = listOf<String>("正常", "房扑", "房颤", "室颤/室扑", "其他心律不齐", "噪声")
+            val labels = listOf<String>("正常", "房扑", "房颤", "室颤/室扑", "其他心律不齐", "噪声", "室上性早搏", "室性早搏")
             val rhythmType = rhythmInfo[0]
             val rhythmP = rhythmInfo[1]
+            val pvc = hrInfo[11]
+            val spvc = hrInfo[12]
 
-//            resVal = "realtime HR:${hr}, hrInfo:${hrInfo.toList()}"
             resultDesc = "minHR:${hrInfo[0].fmt()}, meanHR:${hrInfo[1].fmt()}, maxHR:${hrInfo[2].fmt()}\n" +
                     "minRR:${hrInfo[3].fmt()}, meanHR:${hrInfo[4].fmt()}, maxHR:${hrInfo[5].fmt()}\n" +
                     "PR间期:${hrInfo[6].fmt()}ms\n" +
                     "QRS波宽:${hrInfo[7].fmt()}ms\n" +
                     "SDNN:${hrInfo[8].fmt()}, RMSSD:${hrInfo[9].fmt()}\n" +
-                    "诊断结果:${labels[rhythmType.toInt()]},  置信度:${rhythmP.fmt()}"
+                    "诊断结果:${labels[rhythmType.toInt()]},  置信度:${rhythmP.fmt()}\n" +
+                    "室性早搏数:${pvc}, 室上性早搏数:${spvc}\n"
 
             filteredData = preprocessedSignal.toList()
         }
         Log.d("Demo", "smDiagnose:${resultDesc}")
 
-//                    println("Filtered data: ${filteredData.subList(0, 10)}")
-//                    println("Mean HR: ${hrs.average()}")
-//
-//                    manager.loadModel(this@MainActivity)
-////                    manager.diagnose(ecgData.toDoubleArray())
-//                    manager.diagnose(filteredData.toDoubleArray())
         curveScope.invalidate()
         return resultDesc
     }
@@ -241,12 +237,7 @@ class MainActivity : ComponentActivity() {
             resultDesc = "实时处理算法结果,心率:${hr}"
             Log.d("Demo", "realtime HR: ${hr}")
             filteredData = filtered.toList()
-//                    println("Filtered data: ${filteredData.subList(0, 10)}")
-//                    println("Mean HR: ${hrs.average()}")
-//
-//                    manager.loadModel(this@MainActivity)
-////                    manager.diagnose(ecgData.toDoubleArray())
-//                    manager.diagnose(filteredData.toDoubleArray())
+
             curveScope.invalidate()
         }
         return resultDesc
@@ -254,7 +245,7 @@ class MainActivity : ComponentActivity() {
 
     private fun onLoadCSV() {
         CoroutineScope(Dispatchers.Main).launch {
-            ecgData = loadCSV(maxLength = 300 * 250)  // read 300 seconds of 250Hz data
+            ecgData = loadCSV(maxLength = 30 * 250)  // read 300 seconds of 250Hz data
             println(ecgData.subList(0, 10))
             filteredData = ecgData
             recompose?.invalidate()
