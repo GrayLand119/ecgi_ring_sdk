@@ -71,7 +71,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         // TODO:  Remove apiKey when public demo
         val apiKey = "Lck01t612usETV8+dllv1ywzetzBt0cy3TXeKPqc7Wfz69T9LERsRcDMyumiviyP" // Trial before 2025
-        manager.register(baseContext, apiKey)
+        manager.register(applicationContext, apiKey)
 
         enableEdgeToEdge()
         setContent {
@@ -210,6 +210,7 @@ class MainActivity : ComponentActivity() {
             val labels = listOf<String>("正常", "房扑", "房颤", "室颤/室扑", "其他心律不齐", "噪声", "室上性早搏", "室性早搏")
             val rhythmType = rhythmInfo[0]
             val rhythmP = rhythmInfo[1]
+            val missb = hrInfo[10]
             val pvc = hrInfo[11]
             val spvc = hrInfo[12]
 
@@ -230,6 +231,33 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun onRealtimeProcess():String {
+        var resultDesc:String = ""
+        Log.d("Demo", "onRealtimeProcess called, ecgData size:${ecgData.size}")
+        if (ecgData.size > 2500) {
+            var i = 0
+            var filtered = mutableListOf<Double>()
+            val allHR = mutableListOf<Double>()
+            // 采集新数据前, 调用 resetBuffer 清空缓冲区
+            manager.resetBuffer()
+            while (i < ecgData.size-50) {
+                // 每次采集到部分心电(这里假设是 50 个点), 传入 continueProcess 即可
+                val (data, hr) = manager.continueProcess(ecgData.subList(i,i+50).toDoubleArray(), 250.0)
+                i += 50 // 模拟数据
+                filtered.addAll(data.toList())
+                allHR.add(hr.toDouble())
+            }
+            // 前 3 秒数据是原始数据
+            filtered = filtered.subList(750, filtered.size);
+            val meanHR = allHR.average()
+            resultDesc = "实时处理算法结果,心率:${meanHR}"
+            Log.d("Demo", "realtime HR: ${meanHR}")
+            filteredData = filtered.toList()
+
+            curveScope.invalidate()
+        }
+        return resultDesc
+    }
+    private fun onRealtimeProcess2():String {
         var resultDesc:String = ""
         Log.d("Demo", "onRealtimeProcess called, ecgData size:${ecgData.size}")
         if (ecgData.size > 2500) {

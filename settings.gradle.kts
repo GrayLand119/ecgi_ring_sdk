@@ -18,7 +18,10 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
         maven(url = "https://jitpack.io")
+        // 下载到本地使用
         maven(url = uri("local_mavenrepo"))
+        // 直接使用 github 上的仓库
+//        maven(url = "https://raw.github.com/GrayLand119/ecgi_ring_sdk/master/local_mavenrepo")
     }
 }
 
