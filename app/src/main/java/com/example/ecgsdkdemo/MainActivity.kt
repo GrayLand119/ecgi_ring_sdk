@@ -220,7 +220,8 @@ class MainActivity : ComponentActivity() {
                     "QRS波宽:${hrInfo[7].fmt()}ms\n" +
                     "SDNN:${hrInfo[8].fmt()}, RMSSD:${hrInfo[9].fmt()}\n" +
                     "诊断结果:${labels[rhythmType.toInt()]},  置信度:${rhythmP.fmt()}\n" +
-                    "室性早搏数:${pvc}, 室上性早搏数:${spvc}\n"
+                    "漏搏数:${missb.toInt()}\n" +
+                    "室性早搏数:${pvc.toInt()}, 室上性早搏数:${spvc.toInt()}\n"
 
             filteredData = preprocessedSignal.toList()
         }
