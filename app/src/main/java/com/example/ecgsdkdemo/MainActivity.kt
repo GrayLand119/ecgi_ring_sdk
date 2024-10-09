@@ -274,7 +274,8 @@ class MainActivity : ComponentActivity() {
 
     private fun onLoadCSV() {
         CoroutineScope(Dispatchers.Main).launch {
-            ecgData = loadCSV(maxLength = 30 * 250)  // read 300 seconds of 250Hz data
+//            ecgData = loadCSV(maxLength = 1800 * 250)  // read 1800 seconds of 250Hz data
+            ecgData = loadCSV(maxLength = 300 * 250)  // read 300 seconds of 250Hz data
             println(ecgData.subList(0, 10))
             filteredData = ecgData
             recompose?.invalidate()
