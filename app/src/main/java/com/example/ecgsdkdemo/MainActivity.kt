@@ -31,6 +31,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.RecomposeScope
 import androidx.compose.runtime.currentRecomposeScope
@@ -49,6 +50,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Popup
 import com.example.ecgsdkdemo.ui.theme.ECGSDKDemoTheme
 import com.simo.ecgsdk.ECGManager
 import com.spr.jetpack_loading.components.indicators.PacmanIndicator
@@ -60,6 +62,8 @@ import java.io.InputStreamReader
 import java.util.Locale
 
 class MainActivity : ComponentActivity() {
+    private var _dataDuration: Int = 40
+    private var _startIndex: Int = 0
     private lateinit var curveScope: RecomposeScope
     private var manager: ECGManager = ECGManager.shared()
 
@@ -140,13 +144,18 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    suspend fun loadCSV(maxLength: Int): List<Double> {
+    suspend fun loadCSV(resourceId:Int, startIndex: Int = 0, maxLength: Int = 0): List<Double> {
         return withContext(Dispatchers.IO) {
             var ecgData = mutableListOf<Double>()
-            resources.openRawResource(R.raw.normal100).use { inputStream ->
+            resources.openRawResource(resourceId).use { inputStream ->
                 InputStreamReader(inputStream, Charsets.UTF_8).useLines { lines ->
                     var count = 0
+                    var skipCount = startIndex
                     for (line in lines) {
+                        if (skipCount > 0) {
+                            skipCount--
+                            continue
+                        }
                         ecgData.add(line.toDouble())
                         count++
                         if (maxLength > 0 && count > maxLength) {
@@ -168,16 +177,49 @@ class MainActivity : ComponentActivity() {
             mutableStateOf("")
         }
 
+        var fileName by remember { mutableStateOf("100") }
+        var startIndex by remember { mutableStateOf("0") }
+
         LazyColumn(modifier = padding) {
             item {
                 recompose = currentRecomposeScope
                 Box {
                     PacmanIndicator(canvasSize = 34.dp)
                 }
+                Row {
+                    TextField(
+                        value = fileName,
+                        onValueChange = {
+                            fileName = it
+//                            curveScope.invalidate()
+                        },
+                        singleLine = true
+                    )
+                    TextField(
+                        value = startIndex,
+                        onValueChange = {
+                            startIndex = it
+//                            curveScope.invalidate()
+                        },
+                        singleLine = true
+                    )
+                }
                 Button(onClick = {
-                    onLoadCSV()
+                    manualLoad(fileName, startIndex)
                 }) {
-                    Text(text = "Load ECG Data")
+                    Text(text = "Manual Load")
+                }
+                Row {
+                    Button(onClick = {
+                        onLoadCSV()
+                    }) {
+                        Text(text = "Load ECG Data")
+                    }
+                    Button(onClick = {
+                        onLoadCSVNext()
+                    }) {
+                        Text(text = "Next")
+                    }
                 }
                 Text(text = "ECG DataLength: ${ecgData.size}", color = Color.White)
                 ECGPreview()
@@ -194,6 +236,28 @@ class MainActivity : ComponentActivity() {
                 }
                 Text(text = "Diagnose Process Result:\n${diagnoseResultDesc}", color = Color.White)
             }
+
+        }
+    }
+
+    private fun manualLoad(fileName: String, startIndex: String) {
+        var idMap = mapOf<String, Int>("100" to R.raw.normal100,
+            "207" to R.raw.mit207
+            )
+        _startIndex = startIndex.toInt()
+
+        val fileId: Int = idMap[fileName] ?: 0
+        if (fileId == 0) {
+            return
+        }
+
+        CoroutineScope(Dispatchers.Main).launch {
+//            ecgData = loadCSV(maxLength = 1800 * 250)  // read 1800 seconds of 250Hz data
+            ecgData = loadCSV(fileId, _startIndex, maxLength = _dataDuration * 250)  // read 300 seconds of 250Hz data
+            println(ecgData.subList(0, 10))
+            filteredData = ecgData
+            recompose?.invalidate()
+            curveScope.invalidate()
 
         }
     }
@@ -272,10 +336,24 @@ class MainActivity : ComponentActivity() {
         return resultDesc
     }
 
+
     private fun onLoadCSV() {
+        _startIndex = 10
         CoroutineScope(Dispatchers.Main).launch {
 //            ecgData = loadCSV(maxLength = 1800 * 250)  // read 1800 seconds of 250Hz data
-            ecgData = loadCSV(maxLength = 300 * 250)  // read 300 seconds of 250Hz data
+            ecgData = loadCSV(R.raw.normal100, 10, maxLength = _dataDuration * 250)  // read 300 seconds of 250Hz data
+            println(ecgData.subList(0, 10))
+            filteredData = ecgData
+            recompose?.invalidate()
+            curveScope.invalidate()
+
+        }
+    }
+    private fun onLoadCSVNext() {
+        _startIndex += 10 * 250
+        CoroutineScope(Dispatchers.Main).launch {
+//            ecgData = loadCSV(maxLength = 1800 * 250)  // read 1800 seconds of 250Hz data
+            ecgData = loadCSV(R.raw.normal100, _startIndex, maxLength = _dataDuration * 250)  // read 300 seconds of 250Hz data
             println(ecgData.subList(0, 10))
             filteredData = ecgData
             recompose?.invalidate()
