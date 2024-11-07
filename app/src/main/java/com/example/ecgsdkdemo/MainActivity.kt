@@ -145,6 +145,7 @@ class MainActivity : ComponentActivity() {
     }
 
     suspend fun loadCSV(resourceId:Int, startIndex: Int = 0, maxLength: Int = 0): List<Double> {
+//        return List(15000) { 0.0 }
         return withContext(Dispatchers.IO) {
             var ecgData = mutableListOf<Double>()
             resources.openRawResource(resourceId).use { inputStream ->
