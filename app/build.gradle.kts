@@ -59,7 +59,7 @@ dependencies {
 //    implementation(files("./ECGSDK-release.aar"))
 //    implementation(libs.gson)
 
-    implementation("com.simo.ecgsdkpub:ECGSDK:0.3.2")
+    implementation("com.simo.ecgsdkpub:ECGSDK:0.3.5")
 
     implementation(libs.jetpack.loading)
     implementation(libs.androidx.core.ktx)
