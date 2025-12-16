@@ -2,6 +2,10 @@
 
 版本说明:
 
+- 0.3.5
+  - 修复一些警告
+  - 控制台打印有效日期
+
 - 0.3.4
   - 升级SDK 以及相关库 libtensorflowlite.so, libtensorflowlite-gpu.so 到 16KB 对齐
   
