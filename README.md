@@ -2,15 +2,18 @@
 
 版本说明:
 
+- 0.3.6
+  - 脏数据增加预处理
+  
 - 0.3.5
   - 修复一些警告
   - 控制台打印有效日期
 
 - 0.3.4
   - 升级SDK 以及相关库 libtensorflowlite.so, libtensorflowlite-gpu.so 到 16KB 对齐
-  
+
   - build target 修改为 36
-  
+
 - 0.3.2
   - 扩展心率计算范围到 30~240BPM
   - 修复 `diagnose`函数返回的心电图开始位置波形震荡的问题
