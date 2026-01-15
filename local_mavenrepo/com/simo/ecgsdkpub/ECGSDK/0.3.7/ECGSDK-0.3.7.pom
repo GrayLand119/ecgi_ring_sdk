@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.simo.ecgsdkpub</groupId>
+  <artifactId>ECGSDK</artifactId>
+  <version>0.3.7</version>
+  <packaging>aar</packaging>
+  <name>SIMO ECG Analysis Lib</name>
+  <description>An ECG Processing Library</description>
+  <developers>
+    <developer>
+      <id>GrayLand</id>
+      <name>Guilin Lan</name>
+      <email>441726442@qq.com</email>
+    </developer>
+  </developers>
+  <dependencies>
+    <dependency>
+      <groupId>org.jetbrains.kotlinx</groupId>
+      <artifactId>kotlinx-serialization-json</artifactId>
+      <version>1.4.0</version>
+      <scope>implementation</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.tensorflow</groupId>
+      <artifactId>tensorflow-lite</artifactId>
+      <version>2.17.0</version>
+      <scope>implementation</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.tensorflow</groupId>
+      <artifactId>tensorflow-lite-gpu</artifactId>
+      <version>2.17.0</version>
+      <scope>implementation</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.tensorflow</groupId>
+      <artifactId>tensorflow-lite-gpu-api</artifactId>
+      <version>2.17.0</version>
+      <scope>implementation</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlinx</groupId>
+      <artifactId>kotlinx-coroutines-core</artifactId>
+      <version>1.4.2</version>
+      <scope>implementation</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jetbrains.kotlinx</groupId>
+      <artifactId>kotlinx-coroutines-android</artifactId>
+      <version>1.4.2</version>
+      <scope>implementation</scope>
+    </dependency>
+    <dependency>
+      <groupId>androidx.core</groupId>
+      <artifactId>core-ktx</artifactId>
+      <version>1.7.0</version>
+      <scope>implementation</scope>
+    </dependency>
+  </dependencies>
+</project>

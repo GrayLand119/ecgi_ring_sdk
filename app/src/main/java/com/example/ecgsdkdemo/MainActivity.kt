@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import com.example.ecgsdkdemo.ui.theme.ECGSDKDemoTheme
+import com.simo.ecgsdk.ECGDelegate
 import com.simo.ecgsdk.ECGManager
 import com.spr.jetpack_loading.components.indicators.PacmanIndicator
 import kotlinx.coroutines.CoroutineScope
@@ -75,7 +76,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         // TODO:  Remove apiKey when public demo
         val apiKey = "Lck01t612usETV8+dllv1ywzetzBt0cy3TXeKPqc7Wfz69T9LERsRcDMyumiviyP" // Trial before 2025
-        manager.register(applicationContext, apiKey)
+
+        manager.register(applicationContext, apiKey, ECGDelegate.auto)
 
         enableEdgeToEdge()
         setContent {
