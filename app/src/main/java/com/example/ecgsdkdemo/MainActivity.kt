@@ -76,6 +76,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         // TODO:  Remove apiKey when public demo
         val apiKey = "Lck01t612usETV8+dllv1ywzetzBt0cy3TXeKPqc7Wfz69T9LERsRcDMyumiviyP" // Trial before 2025
+        
 
         manager.register(applicationContext, apiKey, ECGDelegate.auto)
 
@@ -231,6 +232,11 @@ class MainActivity : ComponentActivity() {
                 }) {
                     Text(text = "Realtime Process")
                 }
+                Button(onClick = {
+                    onBenchmark(1000)
+                }) {
+                    Text(text = "Benchmark- x1000")
+                }
                 Text(text = "Realtime Process Result:\n${realtimeResultDesc}", color = Color.White)
                 Button(onClick = {
                     diagnoseResultDesc = onDiagnoseProcess()
@@ -298,6 +304,12 @@ class MainActivity : ComponentActivity() {
         return resultDesc
     }
 
+    private fun onBenchmark(times: Int) {
+        for (i in 0 until times) {
+            onRealtimeProcess()
+            onDiagnoseProcess()
+        }
+    }
     private fun onRealtimeProcess():String {
         var resultDesc:String = ""
         Log.d("Demo", "onRealtimeProcess called, ecgData size:${ecgData.size}")

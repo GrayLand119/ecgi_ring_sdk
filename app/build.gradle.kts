@@ -5,18 +5,22 @@ plugins {
 
 android {
     namespace = "com.example.ecgsdkdemo"
-    compileSdk = 34
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.ecgsdkdemo"
         minSdk = 28 // Android 9.0 - 28
-        targetSdk = 34
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
+        }
+
+        ndk {
+            abiFilters.addAll(listOf("armeabi-v7a", "arm64-v8a"))
         }
     }
 
@@ -34,12 +38,15 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "17"
     }
+
+    ndkVersion = "28.2.13676358"
+
     buildFeatures {
         compose = true
     }
@@ -51,6 +58,7 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
 //    repositories { flatDir { dirs("libs") }}
 }
 
